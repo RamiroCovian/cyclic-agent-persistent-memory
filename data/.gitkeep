@@ -1,0 +1,2 @@
+# Directorio para el checkpointer SQLite local.
+# Los archivos .db se ignoran vía .gitignore.
