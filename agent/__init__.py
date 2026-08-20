@@ -9,6 +9,7 @@ from agent.tools import (
     obtener_detalle_ultimo_pedido,
     obtener_herramientas,
 )
+from agent.trace import construir_traza, guardar_traza
 
 __version__ = "0.1.0"
 
@@ -19,9 +20,11 @@ __all__ = [
     "build_run_config",
     "buscar_pedido",
     "buscar_pedidos",
+    "construir_traza",
     "create_llm",
     "create_llm_with_tools",
     "describe_graph",
+    "guardar_traza",
     "obtener_detalle_ultimo_pedido",
     "obtener_herramientas",
     "open_async_checkpointer",
