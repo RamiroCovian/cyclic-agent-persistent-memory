@@ -14,7 +14,7 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
 
 from agent.config import Settings, load_settings
-from agent.llm import create_llm
+from agent.llm import create_llm_with_tools
 from agent.tools import obtener_herramientas
 
 SYSTEM_PROMPT = (
@@ -84,7 +84,7 @@ def build_graph(settings: Settings | None = None) -> CompiledStateGraph:
     """
     resolved = settings or load_settings()
     tools = obtener_herramientas()
-    llm_with_tools = create_llm(resolved).bind_tools(tools)
+    llm_with_tools = create_llm_with_tools(resolved, tools)
     return _compile_graph(llm_with_tools, tools)
 
 
