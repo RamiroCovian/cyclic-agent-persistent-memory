@@ -37,7 +37,6 @@ env\Scripts\activate
 source env/bin/activate
 
 pip install -r requirements.txt
-pip install -r requirements-dev.txt
 ```
 
 ### 3. Ejecutar tests unitarios
@@ -85,8 +84,7 @@ python -c "import asyncio; from agent.main import demostrar_memoria_sesion; asyn
 ├── traces/              # Trazas de ejemplo incluidas en el repo
 ├── tests/               # Pruebas unitarias (pytest)
 ├── .env.example         # Plantilla sin secretos
-├── requirements.txt
-└── requirements-dev.txt # pytest y deps de desarrollo
+└── requirements.txt     # Dependencias (incluye pytest)
 ```
 
 ## Traza de ejemplo
