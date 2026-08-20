@@ -1,7 +1,7 @@
 """Definición del StateGraph ReAct: modelo ↔ herramientas.
 
 Usa ``MessagesState`` como base del estado, un nodo de modelo con
-``bind_tools``, un ``ToolNode`` y la arista condicional ``tools_condition``.
+``bind_tools``, un ``ToolNode``, ``tools_condition`` y checkpointer SQLite.
 """
 
 from __future__ import annotations
@@ -22,7 +22,9 @@ SYSTEM_PROMPT = (
     "Usá las herramientas disponibles para obtener datos reales antes de responder. "
     "Si falta información (por ejemplo el cliente_id), pedí aclaración. "
     "Si una herramienta falla o devuelve error, reintentá con otros parámetros "
-    "o pedí más detalles al usuario. Respondé siempre en español."
+    "o pedí más detalles al usuario. "
+    "Cuando el usuario diga 'el último' u otra referencia al contexto previo, "
+    "reutilizá el cliente_id de la conversación. Respondé siempre en español."
 )
 
 
@@ -34,12 +36,17 @@ class AgentState(MessagesState):
     """
 
 
-def _compile_graph(llm_with_tools: Any, tools: list[Any]) -> CompiledStateGraph:
+def _compile_graph(
+    llm_with_tools: Any,
+    tools: list[Any],
+    checkpointer: Any | None = None,
+) -> CompiledStateGraph:
     """Ensambla nodos, aristas y compila el StateGraph.
 
     Args:
         llm_with_tools: Modelo ya vinculado con ``bind_tools``.
         tools: Lista de herramientas para el ``ToolNode``.
+        checkpointer: Checkpointer opcional (``SqliteSaver`` / ``AsyncSqliteSaver``).
 
     Returns:
         Grafo compilado con ciclo modelo ↔ herramientas.
@@ -70,14 +77,18 @@ def _compile_graph(llm_with_tools: Any, tools: list[Any]) -> CompiledStateGraph:
     )
     graph.add_edge("tools", "model")
 
-    return graph.compile()
+    return graph.compile(checkpointer=checkpointer)
 
 
-def build_graph(settings: Settings | None = None) -> CompiledStateGraph:
+def build_graph(
+    settings: Settings | None = None,
+    checkpointer: Any | None = None,
+) -> CompiledStateGraph:
     """Construye y compila el grafo modelo ↔ herramientas.
 
     Args:
         settings: Configuración del LLM. Si es ``None``, se carga desde el entorno.
+        checkpointer: Persistencia SQLite. Si se pasa, el grafo recuerda por ``thread_id``.
 
     Returns:
         Grafo compilado listo para ``invoke`` / ``ainvoke``.
@@ -85,7 +96,7 @@ def build_graph(settings: Settings | None = None) -> CompiledStateGraph:
     resolved = settings or load_settings()
     tools = obtener_herramientas()
     llm_with_tools = create_llm_with_tools(resolved, tools)
-    return _compile_graph(llm_with_tools, tools)
+    return _compile_graph(llm_with_tools, tools, checkpointer=checkpointer)
 
 
 def build_graph_topology() -> CompiledStateGraph:
@@ -131,5 +142,6 @@ def describe_graph(compiled: CompiledStateGraph | None = None) -> str:
         "StateGraph (AgentState <- MessagesState)\n"
         f"Nodos: {nodes}\n"
         f"Aristas:\n{edges_text}\n"
-        "Condicional: model --tools_condition--> tools | END"
+        "Condicional: model --tools_condition--> tools | END\n"
+        "Persistencia: SqliteSaver/AsyncSqliteSaver + thread_id"
     )
