@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-08-20T19:12:35.545775+00:00",
+  "thread_id": "multipaso-9acf3a48",
+  "recursion_limit": 10,
+  "pregunta": "Del cliente 102, ¿cuántos pedidos tuvo, cuál fue el total y cuál es el detalle del último pedido?",
+  "tool_calls_count": 2,
+  "multipaso": true,
+  "messages": [
+    {
+      "type": "human",
+      "content": "Del cliente 102, ¿cuántos pedidos tuvo, cuál fue el total y cuál es el detalle del último pedido?"
+    },
+    {
+      "type": "ai",
+      "content": "",
+      "tool_calls": [
+        {
+          "name": "buscar_pedidos",
+          "args": {
+            "cliente_id": 102
+          },
+          "id": "call_2804378"
+        },
+        {
+          "name": "obtener_detalle_ultimo_pedido",
+          "args": {
+            "cliente_id": 102
+          },
+          "id": "call_2804379"
+        }
+      ]
+    },
+    {
+      "type": "tool",
+      "content": "{\"cliente_id\": 102, \"pedidos\": 3, \"total\": 14500.0}",
+      "name": "buscar_pedidos",
+      "tool_call_id": "call_2804378"
+    },
+    {
+      "type": "tool",
+      "content": "{\"cliente_id\": 102, \"ultimo_pedido\": {\"pedido_id\": 6003, \"fecha\": \"2026-03-08\", \"monto\": 4800.0, \"estado\": \"en_camino\"}}",
+      "name": "obtener_detalle_ultimo_pedido",
+      "tool_call_id": "call_2804379"
+    },
+    {
+      "type": "ai",
+      "content": "El cliente 102 ha realizado un total de 3 pedidos, sumando un monto acumulado de 14.500.\n\nEn cuanto a su último pedido (ID 6003), realizado el 8 de marzo de 2026, tiene un monto de 4.800 y actualmente se encuentra en estado \"en camino\"."
+    }
+  ]
+}
