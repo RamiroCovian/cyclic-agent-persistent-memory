@@ -2,6 +2,7 @@
 
 from agent.graph import AgentState, build_graph, describe_graph
 from agent.llm import bind_tools_to_llm, create_llm, create_llm_with_tools
+from agent.persistence import build_run_config, open_async_checkpointer
 from agent.tools import (
     buscar_pedido,
     buscar_pedidos,
@@ -15,6 +16,7 @@ __all__ = [
     "AgentState",
     "bind_tools_to_llm",
     "build_graph",
+    "build_run_config",
     "buscar_pedido",
     "buscar_pedidos",
     "create_llm",
@@ -22,5 +24,6 @@ __all__ = [
     "describe_graph",
     "obtener_detalle_ultimo_pedido",
     "obtener_herramientas",
+    "open_async_checkpointer",
     "__version__",
 ]
