@@ -37,9 +37,18 @@ env\Scripts\activate
 source env/bin/activate
 
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
 
-### 3. Ejecutar la demo multi-paso
+### 3. Ejecutar tests unitarios
+
+```bash
+pytest -q
+```
+
+Los tests cubren tools/DB, config, LLM+`bind_tools`, topología del grafo, persistencia (`thread_id`/`recursion_limit`) y exportación de trazas. No requieren API keys reales.
+
+### 4. Ejecutar la demo multi-paso
 
 ```bash
 python -m agent.main
@@ -74,8 +83,10 @@ python -c "import asyncio; from agent.main import demostrar_memoria_sesion; asyn
 │   └── tools/           # Herramientas @tool (buscar_pedidos, etc.)
 ├── data/                # SQLite local (ignorado por git)
 ├── traces/              # Trazas de ejemplo incluidas en el repo
+├── tests/               # Pruebas unitarias (pytest)
 ├── .env.example         # Plantilla sin secretos
-└── requirements.txt
+├── requirements.txt
+└── requirements-dev.txt # pytest y deps de desarrollo
 ```
 
 ## Traza de ejemplo
